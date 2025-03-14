@@ -16,7 +16,8 @@ const SalaryCalculator = () => {
     heterogeneity: '1.0',     // 异性环境系数
     teamwork: '1.0',          // 同事环境系数
     education: '1.6',         // 学历系数
-    cityFactor: '1.0'         // 城市系数，默认为三线城市
+    cityFactor: '1.0',        // 城市系数，默认为三线城市
+    isSalaryOnTime: '1'       // 是否按时发薪
   });
 
   const calculateWorkingDays = useCallback(() => {
@@ -53,8 +54,8 @@ const SalaryCalculator = () => {
                             Number(formData.teamwork) *
                             Number(formData.cityFactor);
     
-    return (dailySalary * environmentFactor) / 
-           (35 * (workHours + commuteHours - 0.5 * breakHours) * Number(formData.education));
+    return ((dailySalary * environmentFactor) / 
+           (35 * (workHours + commuteHours - 0.5 * breakHours) * Number(formData.education))) * Number(formData.isSalaryOnTime);
   };
 
   const value = calculateValue();
@@ -278,6 +279,17 @@ const SalaryCalculator = () => {
                 { label: '92/研究硕', value: '1.6' },
                 { label: '普通博士', value: '1.8' },
                 { label: '名校博士', value: '2.0' },
+              ]}
+            />
+
+            <RadioGroup
+              label="按时发工资"
+              name="isSalaryOnTime"
+              value={formData.isSalaryOnTime}
+              onChange={handleInputChange}
+              options={[
+                { label: '是', value: '1' },
+                { label: '否', value: '0' },
               ]}
             />
           </div>
