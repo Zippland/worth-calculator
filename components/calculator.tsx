@@ -656,7 +656,6 @@ const SalaryCalculator = () => {
 
           {/* 第四排: 历史记录 */}
           <div className="flex items-center justify-center">
-            {/* 添加历史记录按钮 */}
             <button
               onClick={() => setShowHistory(!showHistory)}
               className="ml-4 inline-flex items-center text-sm text-blue-500 hover:text-blue-700 focus:outline-none"
