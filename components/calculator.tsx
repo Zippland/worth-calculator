@@ -6,6 +6,7 @@ import Link from 'next/link'; // 导入Link组件用于导航
 import { useLanguage } from './LanguageContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { countryNames } from './LanguageContext';
+import {type} from "node:os";
 
 // 定义PPP转换因子映射表
 const pppFactors: Record<string, number> = {
@@ -334,11 +335,13 @@ interface HistoryItem {
   homeTown: string;
   shuttle: string;
   canteen: string;
+  climate: string;
   workYears: string;
   jobStability: string;
   bachelorType: string;
   hasShuttle: boolean;
   hasCanteen: boolean;
+  hasClimate: boolean;
 }
 
 // 定义表单数据接口
@@ -364,10 +367,12 @@ interface FormData {
   workYears: string;
   shuttle: string;
   canteen: string;
+  climate: string
   jobStability: string;
   education: string;
   hasShuttle: boolean;
   hasCanteen: boolean;
+  hasClimate: boolean;
 }
 
 // 定义计算结果接口
@@ -432,10 +437,12 @@ const SalaryCalculator = () => {
     workYears: '0',
     shuttle: '1.0',
     canteen: '1.0',
+    climate: '1.0',
     jobStability: 'private',   // 新增：工作稳定度/类型
     education: '1.0',
     hasShuttle: false,         // 确保这是一个明确的布尔值
     hasCanteen: false,         // 确保这是一个明确的布尔值
+    hasClimate: false,
   });
 
   const [showPPPInput, setShowPPPInput] = useState(false);
@@ -508,12 +515,14 @@ const SalaryCalculator = () => {
             homeTown: item.homeTown || formData.homeTown,
             shuttle: item.shuttle || formData.shuttle,
             canteen: item.canteen || formData.canteen,
+            climate: item.climate || formData.climate,
             workYears: item.workYears || formData.workYears,
             jobStability: item.jobStability || formData.jobStability,
             bachelorType: item.bachelorType || formData.bachelorType,
             // 确保 hasShuttle 和 hasCanteen 有合法的布尔值，即使历史记录中没有这些字段
             hasShuttle: typeof item.hasShuttle === 'boolean' ? item.hasShuttle : false,
             hasCanteen: typeof item.hasCanteen === 'boolean' ? item.hasCanteen : false,
+            hasClimate: typeof item.hasClimate === 'boolean' ? item.hasClimate : false,
           }));
           
           setHistory(normalizedHistory);
@@ -684,13 +693,17 @@ const SalaryCalculator = () => {
     
     // 食堂系数只在勾选时使用，否则为1.0
     const canteenFactor = formData.hasCanteen ? Number(formData.canteen) : 1.0;
+
+    // 气候系数只在勾选时使用，否则为1.0
+    const climateFactor = formData.hasClimate ? Number(formData.climate) : 1.0;
     
     // 工作环境因素，包含食堂和家乡因素
     const environmentFactor = Number(formData.workEnvironment) * 
                             Number(formData.leadership) * 
                             Number(formData.teamwork) *
                             Number(formData.cityFactor) *
-                            canteenFactor;
+                            canteenFactor *
+                            climateFactor;
     
     // 根据工作年限计算经验薪资倍数
     const workYears = Number(formData.workYears);
@@ -891,11 +904,13 @@ const SalaryCalculator = () => {
       homeTown: formData.homeTown,
       shuttle: formData.hasShuttle ? formData.shuttle : '1.0',
       canteen: formData.hasCanteen ? formData.canteen : '1.0',
+      climate: formData.hasClimate ? formData.climate : '1.0',
       workYears: formData.workYears,
       jobStability: formData.jobStability,
       bachelorType: formData.bachelorType,
       hasShuttle: formData.hasShuttle,
       hasCanteen: formData.hasCanteen,
+      hasClimate: formData.hasClimate,
     };
     
     try {
@@ -908,7 +923,7 @@ const SalaryCalculator = () => {
     }
     
     return newHistoryItem;
-  }, [formData, value, getValueAssessmentKey, getValueAssessment, selectedCountry, history, getCountryName, calculateWorkingDays, getDisplaySalary, formData.hasShuttle, formData.hasCanteen]);
+  }, [formData, value, getValueAssessmentKey, getValueAssessment, selectedCountry, history, getCountryName, calculateWorkingDays, getDisplaySalary, formData.hasShuttle, formData.hasCanteen, formData.hasClimate]);
   
   // 删除单条历史记录
   const deleteHistoryItem = useCallback((id: string, e: React.MouseEvent) => {
@@ -1073,12 +1088,14 @@ const SalaryCalculator = () => {
                                 homeTown: item.homeTown,
                                 shuttle: item.shuttle,
                                 canteen: item.canteen,
+                                climate: item.climate,
                                 workYears: item.workYears,
                                 jobStability: item.jobStability,
                                 bachelorType: item.bachelorType,
                                 // 确保 hasShuttle 和 hasCanteen 有合法的布尔值
                                 hasShuttle: typeof item.hasShuttle === 'boolean' ? item.hasShuttle : false,
                                 hasCanteen: typeof item.hasCanteen === 'boolean' ? item.hasCanteen : false,
+                                hasClimate: typeof item.hasClimate === 'boolean' ? item.hasClimate : false,
                               });
                               
                               // 设置国家
@@ -1122,6 +1139,7 @@ const SalaryCalculator = () => {
                                 homeTown: item.homeTown,
                                 shuttle: item.shuttle,
                                 canteen: item.canteen,
+                                climate: item.climate,
                                 workYears: item.workYears,
                                 jobStability: item.jobStability,
                                 bachelorType: item.bachelorType,
@@ -1129,6 +1147,7 @@ const SalaryCalculator = () => {
                                 countryName: getCountryName(item.countryCode),
                                 hasShuttle: item.hasShuttle,
                                 hasCanteen: item.hasCanteen,
+                                hasClimate: item.hasClimate,
                               }
                             }}
                             className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 p-1.5 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded"
@@ -1576,15 +1595,46 @@ const SalaryCalculator = () => {
                 />
               )}
             </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center mb-2">
+                <input
+                    id="hasClimate"
+                    type="checkbox"
+                    checked={formData.hasClimate === true}
+                    onChange={(e) => handleInputChange('hasClimate', e.target.checked)}
+                    className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                />
+                <label htmlFor="hasClimate" className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {t('climate')}
+                </label>
+              </div>
+
+              {formData.hasClimate && (
+                  <RadioGroup
+                      label=""
+                      name="climate"
+                      value={formData.climate}
+                      onChange={handleInputChange}
+                      options={[
+                        { label: t('climate_none'), value: '1.0' },
+                        { label: t('climate_average'), value: '1.05' },
+                        { label: t('climate_good'), value: '1.1' },
+                        { label: t('climate_excellent'), value: '1.15' },
+                      ]}
+                  />
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       {/* 结果卡片优化 */}
-      <div ref={shareResultsRef} className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 shadow-inner">
+      <div ref={shareResultsRef}
+           className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 shadow-inner">
         <div className="grid grid-cols-3 gap-8">
           <div>
-            <div className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('working_days_per_year')}</div>
+          <div className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('working_days_per_year')}</div>
             <div className="text-2xl font-semibold mt-1 text-gray-900 dark:text-white">{calculateWorkingDays()}{t('days_unit')}</div>
           </div>
           <div>
@@ -1632,6 +1682,7 @@ const SalaryCalculator = () => {
                 homeTown: formData.homeTown,
                 shuttle: formData.hasShuttle ? formData.shuttle : '1.0',
                 canteen: formData.hasCanteen ? formData.canteen : '1.0',
+                climate: formData.hasClimate ? formData.climate : '1.0',
                 workYears: formData.workYears,
                 jobStability: formData.jobStability,
                 bachelorType: formData.bachelorType,
@@ -1640,6 +1691,7 @@ const SalaryCalculator = () => {
                 currencySymbol: getCurrencySymbol(selectedCountry),
                 hasShuttle: formData.hasShuttle,
                 hasCanteen: formData.hasCanteen,
+                hasClimate: formData.hasClimate,
               }
             }}
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors
