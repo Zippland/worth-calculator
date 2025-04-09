@@ -298,16 +298,22 @@ const ShareCard: React.FC<ShareCardProps> = (props) => {
     } else {
       cityComment += " " + t('share_not_hometown_comment');
     }
+
+    const cityDetails = [
+      { label: t('share_work_city'), value: cityName },
+      { label: t('share_is_hometown'), value: isHomeTown ? t('share_yes') : t('share_no') },
+      { label: t('share_country'), value: getCountryName(props.countryCode, language) }
+    ];
+
+    if (props.hasClimate) {
+      cityDetails.push({ label: t('share_climate_quality'), value: getClimateDesc(props.climate, t) });
+    }
     
     comments.push({ 
       title: t('share_work_city'), 
       content: cityComment, 
       emoji: isHomeTown ? "🏡" : "🌆",
-      details: [
-        { label: t('share_work_city'), value: cityName },
-        { label: t('share_is_hometown'), value: isHomeTown ? t('share_yes') : t('share_no') },
-        { label: t('share_country'), value: getCountryName(props.countryCode, language) }
-      ]
+      details: cityDetails
     });
     
     // 3. 通勤与WFH评价
@@ -404,11 +410,6 @@ const ShareCard: React.FC<ShareCardProps> = (props) => {
       environmentDetails.push({ label: t('share_canteen_quality'), value: getCanteenDesc(props.canteen, t) });
     }
 
-    // 只有当用户勾选了气候选项时才添加气候信息
-    if (props.hasClimate) {
-      environmentDetails.push({ label: t('share_climate_quality'), value: getClimateDesc(props.climate, t) });
-    }
-    
     comments.push({ 
       title: t('share_work_environment_title'), 
       content: environmentComment, 
