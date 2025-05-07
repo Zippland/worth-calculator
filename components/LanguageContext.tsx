@@ -659,7 +659,12 @@ const translations: Record<Language, Record<string, string>> = {
     'canteen_average': '食堂一般',
     'canteen_good': '食堂不错',
     'canteen_excellent': '食堂超赞',
-    
+    'climate': '气候情况（加分项）',
+    'climate_none': '气候恶劣',
+    'climate_average': '气候一般',
+    'climate_good': '舒适宜人',
+    'climate_excellent': '度假天堂',
+
     // 教育和工作经验
     'education_level': '个人学历水平',
     'degree_type': '学位类型',
@@ -722,6 +727,7 @@ const translations: Record<Language, Record<string, string>> = {
     'share_leadership_relation': '领导关系',
     'share_colleague_relationship': '同事关系',
     'share_canteen_quality': '食堂情况',
+    'share_climate_quality': '气候情况',
     'share_education_and_experience': '教育与工作经验',
     'share_highest_degree': '最高学历',
     'share_school_type_label': '学校类型',
@@ -897,6 +903,11 @@ const translations: Record<Language, Record<string, string>> = {
     'canteen_average': 'Average Quality',
     'canteen_good': 'Good Quality',
     'canteen_excellent': 'Excellent Quality',
+    'climate': 'Climate Quality (Bonus)',
+    'climate_none': 'Unbearable',
+    'climate_average': 'Decent',
+    'climate_good': 'Comfortable and Pleasant',
+    'climate_excellent': 'Absolutely Delightful',
     
     // Education and work experience
     'education_level': 'Education Level',
@@ -960,6 +971,7 @@ const translations: Record<Language, Record<string, string>> = {
     'share_leadership_relation': 'Leadership',
     'share_colleague_relationship': 'Colleague Relations',
     'share_canteen_quality': 'Canteen',
+    'share_climate_quality': 'Climate',
     'share_education_and_experience': 'Education & Experience',
     'share_highest_degree': 'Highest Degree',
     'share_school_type_label': 'School Type',
@@ -1135,6 +1147,11 @@ const translations: Record<Language, Record<string, string>> = {
     'canteen_average': '普通',
     'canteen_good': '美味しい',
     'canteen_excellent': '非常に美味しい',
+    'climate': '気候（加点項目）',
+    'climate_none': '過酷で居心地が悪い',
+    'climate_average': 'まあまあ、可もなく不可もなく',
+    'climate_good': '過ごしやすくて快適',
+    'climate_excellent': 'まるでリゾートのように快適',
     
     // 教育と経験
     'education_level': '学歴',
@@ -1198,6 +1215,7 @@ const translations: Record<Language, Record<string, string>> = {
     'share_leadership_relation': '上司との関係',
     'share_colleague_relationship': '同僚との関係',
     'share_canteen_quality': '社員食堂',
+    'share_climate_quality': '気候',
     'share_education_and_experience': '学歴と経験',
     'share_highest_degree': '最終学歴',
     'share_school_type_label': '大学タイプ',

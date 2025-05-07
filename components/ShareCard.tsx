@@ -38,6 +38,7 @@ interface ShareCardProps {
   homeTown: string;
   shuttle: string;
   canteen: string;
+  climate: string;
   
   // 学历和工作经验
   degreeType: string;
@@ -50,6 +51,7 @@ interface ShareCardProps {
   // 新增属性
   hasShuttle: boolean;
   hasCanteen: boolean;
+  hasClimate: boolean;
 }
 
 // 将中文评级转换为翻译键
@@ -143,6 +145,15 @@ const getCanteenDesc = (canteen: string, t: (key: string) => string): string => 
   else if (canteen === '1.1') return t('canteen_good');
   else if (canteen === '1.15') return t('canteen_excellent');
   return t('canteen_none');
+};
+
+// 获取气候情况描述
+const getClimateDesc = (climate: string, t: (key: string) => string): string => {
+  if (climate === '1.0') return t('climate_none');
+  else if (climate === '1.05') return t('climate_average');
+  else if (climate === '1.1') return t('climate_good');
+  else if (climate === '1.15') return t('climate_excellent');
+  return t('climate_none');
 };
 
 // 获取合同类型描述
@@ -287,16 +298,22 @@ const ShareCard: React.FC<ShareCardProps> = (props) => {
     } else {
       cityComment += " " + t('share_not_hometown_comment');
     }
+
+    const cityDetails = [
+      { label: t('share_work_city'), value: cityName },
+      { label: t('share_is_hometown'), value: isHomeTown ? t('share_yes') : t('share_no') },
+      { label: t('share_country'), value: getCountryName(props.countryCode, language) }
+    ];
+
+    if (props.hasClimate) {
+      cityDetails.push({ label: t('share_climate_quality'), value: getClimateDesc(props.climate, t) });
+    }
     
     comments.push({ 
       title: t('share_work_city'), 
       content: cityComment, 
       emoji: isHomeTown ? "🏡" : "🌆",
-      details: [
-        { label: t('share_work_city'), value: cityName },
-        { label: t('share_is_hometown'), value: isHomeTown ? t('share_yes') : t('share_no') },
-        { label: t('share_country'), value: getCountryName(props.countryCode, language) }
-      ]
+      details: cityDetails
     });
     
     // 3. 通勤与WFH评价
@@ -392,7 +409,7 @@ const ShareCard: React.FC<ShareCardProps> = (props) => {
     if (props.hasCanteen) {
       environmentDetails.push({ label: t('share_canteen_quality'), value: getCanteenDesc(props.canteen, t) });
     }
-    
+
     comments.push({ 
       title: t('share_work_environment_title'), 
       content: environmentComment, 
@@ -800,6 +817,12 @@ const ShareCard: React.FC<ShareCardProps> = (props) => {
                           <span className="text-sm text-gray-500">{t('share_canteen_quality')}</span>
                           <span className="font-medium text-gray-800">{getCanteenDesc(props.canteen, t)}</span>
                         </div>
+                      )}
+                      {props.hasClimate && (
+                          <div className="bg-gray-50 p-3 rounded-lg flex justify-between">
+                            <span className="text-sm text-gray-500">{t('share_climate_quality')}</span>
+                            <span className="font-medium text-gray-800">{getClimateDesc(props.climate, t)}</span>
+                          </div>
                       )}
                     </div>
                   </div>
