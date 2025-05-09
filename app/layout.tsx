@@ -51,7 +51,7 @@ export default function RootLayout({
         </LanguageProvider>
         <div className="pb-8"></div>
         <footer className="w-full py-3 border-t bg-white/90 dark:bg-gray-900/80 dark:border-gray-800/50">
-          <div className="max-w-4xl mx-auto px-4">
+          {/* <div className="max-w-4xl mx-auto px-4">
             <div className="flex justify-center items-center gap-6 mb-2">
               <a 
                 href="https://offerselect.zippland.com/" 
@@ -112,7 +112,7 @@ export default function RootLayout({
             <div className="text-center">
               <span className="text-[10px] text-gray-400 dark:text-gray-500">更多实用工具 by zippland.com</span>
             </div>
-          </div>
+          </div> */}
         </footer>
       </body>
     </html>

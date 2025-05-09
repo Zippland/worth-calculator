@@ -397,13 +397,13 @@ const SalaryCalculator = () => {
   useEffect(() => {
     setIsBrowser(true);
     
-    // 在客户端环境中执行重定向
-    if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname;
-      if (hostname !== 'worthjob.zippland.com' && hostname !== 'localhost' && !hostname.includes('127.0.0.1')) {
-        window.location.href = 'https://worthjob.zippland.com' + window.location.pathname;
-      }
-    }
+    // // 在客户端环境中执行重定向
+    // if (typeof window !== 'undefined') {
+    //   const hostname = window.location.hostname;
+    //   if (hostname !== 'worthjob.zippland.com' && hostname !== 'localhost' && !hostname.includes('127.0.0.1')) {
+    //     window.location.href = 'https://worthjob.zippland.com' + window.location.pathname;
+    //   }
+    // }
   }, []);
   
   // 添加用于创建分享图片的引用
@@ -974,7 +974,7 @@ const SalaryCalculator = () => {
       <div className="mb-4 text-center">
         <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 py-2">{t('title')}</h1>
         
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <a
             href="https://github.com/zippland/worth-calculator"
             target="_blank"
@@ -984,11 +984,11 @@ const SalaryCalculator = () => {
             <Star className="h-3.5 w-3.5" />
             {t('star_request')}
           </a>
-        </div>
+        </div> */}
         
         <div className="flex items-center justify-center gap-3 mb-2">
-          <p className="text-sm text-gray-500 dark:text-gray-400">v6.2.1</p>
-          <a
+          {/* <p className="text-sm text-gray-500 dark:text-gray-400">v6.2.1</p> */}
+          {/* <a
             href="https://github.com/zippland/worth-calculator"
             target="_blank"
             rel="noopener noreferrer"
@@ -996,8 +996,8 @@ const SalaryCalculator = () => {
           >
             <Github className="h-3.5 w-3.5" />
             {t('github')}
-          </a>
-          <a
+          </a> */}
+          {/* <a
             href="https://www.xiaohongshu.com/user/profile/623e8b080000000010007721?xsec_token=YBzoLUB4HsSITTBOgPAXY-0Gvqvn3HqHpcDeA3sHhDh-M%3D&xsec_source=app_share&xhsshare=CopyLink&appuid=5c5d5259000000001d00ef04&apptime=1743400694&share_id=b9bfcd5090f9473daf5c1d1dc3eb0921&share_channel=copy_link"
             target="_blank"
             rel="noopener noreferrer"
@@ -1005,7 +1005,7 @@ const SalaryCalculator = () => {
           >
             <Book className="h-3.5 w-3.5" />
             {t('xiaohongshu')}
-          </a>
+          </a> */}
           {/* 仅在客户端渲染历史记录按钮 */}
           {isBrowser && (
             <button

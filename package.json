@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "pnpm run build && wrangler pages deploy ./out",
+    "deploy": "pnpm run build && wrangler pages deploy --project-name worthjob ./out",
     "docker": "pnpm run build && docker build -t worth-calculator ."
   },
   "dependencies": {
