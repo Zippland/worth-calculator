@@ -578,6 +578,11 @@ const ShareCard: React.FC<ShareCardProps> = (props) => {
       // 动态导入html2canvas，确保只在客户端加载
       const html2canvasModule = await import('html2canvas');
       const html2canvas = html2canvasModule.default;
+
+      // 修复 html2canvas 在处理 rem 时文字基线问题
+      const style = document.createElement('style');
+      document.head.appendChild(style);
+      style.sheet?.insertRule('body > div:last-child img { display: inline-block; }');
       
       // 使用html2canvas生成图片
       const canvas = await html2canvas(element, {
@@ -587,6 +592,9 @@ const ShareCard: React.FC<ShareCardProps> = (props) => {
         allowTaint: true,
         logging: false
       });
+
+      // 生成 canvas 后移除临时的 style 标签
+      style.remove();
       
       // 转换为图片并下载
       const image = canvas.toDataURL('image/png');
