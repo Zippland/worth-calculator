@@ -633,6 +633,17 @@ const SalaryCalculator = () => {
   }, [calculateDailySalary, selectedCountry]);
 
   const handleInputChange = useCallback((name: string, value: string | boolean) => {
+    if (typeof value === 'string') {
+      // 非负验证：仅对数字字段进行，允许为空字符串
+      const numericFields = ['salary', 'workHours', 'commuteHours', 'restTime', 'annualLeave', 'paidSickLeave', 'publicHolidays', 'workDaysPerWeek', 'wfhDaysPerWeek'];
+      if (numericFields.includes(name) && value !== '') {
+        const number = parseFloat(value);
+        if (isNaN(number) || number < 0) {
+          return; // 忽略非法负数输入
+        }
+      }
+    }
+
     // 触发自定义事件，保存滚动位置
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new Event('beforeStateChange'));
