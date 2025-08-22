@@ -45,7 +45,7 @@
 - **🌏 PPP Conversion**: International salary comparison with Purchasing Power Parity conversion across 190+ countries
 - **👩‍🎓 Personal Factors**: Customize calculations with personal education level, work experience, and more
 - **📱 Detailed Report**: Generate a shareable, downloadable job analysis report
-- **🌐 Internationalization**: Available in both English and Chinese
+- **🌐 Internationalization**: Available in English/Chinese/Japanese.
 - **📱 Mobile Friendly**: Responsive design works on all devices
 
 ### 🖥️ How to Use
@@ -97,7 +97,7 @@ Please make sure to test your changes before submitting a PR.
 - **🌏 PPP转换**: 通过购买力平价(PPP)转换支持190多个国家的薪资比较
 - **👩‍🎓 个人因素**: 根据个人学历、工作经验等定制计算
 - **📱 详细报告**: 生成可分享、可下载的工作分析报告
-- **🌐 国际化**: 支持中英文双语
+- **🌐 国际化**: 支持中文/英文/日文
 - **📱 移动友好**: 响应式设计，适用于所有设备
 
 ### 🖥️ 使用方法
@@ -141,13 +141,13 @@ Please make sure to test your changes before submitting a PR.
 
 <h2 align="center">📊 仕事の価値計算機</h2>
 
-<p align="center"><i>給料だけでなく、仕事の本当の価値を計算する</i></p>
+<p align="center"><i>給料だけでなく、仕事の真の価値を算出します</i></p>
 
 ### ✨ 特徴
 
 - **💰 総合的な評価**: 給与、労働時間、通勤時間、職場環境など複数の要素に基づいて仕事の価値を計算
 - **🌏 PPP変換**: 購買力平価(PPP)による190カ国以上の国際的な給与比較
-- **👩‍🎓 個人要素**: 学歴、職務経験などに基づいてカスタマイズされた計算
+- **👩‍🎓 個人要素**: 学歴、職歴などに基づくカスタム計算
 - **📱 詳細レポート**: 共有可能でダウンロード可能な仕事分析レポートの生成
 - **🌐 多言語対応**: 英語、中国語、日本語で利用可能
 - **📱 モバイル対応**: すべてのデバイスで動作するレスポンシブデザイン
@@ -160,7 +160,7 @@ Please make sure to test your changes before submitting a PR.
 4. 環境要素（都市、職場環境、チームなど）を指定
 5. 学歴と経験を入力
 6. 仕事の価値スコアと詳細評価を確認
-7. 共有可能なレポートを生成
+7. ダウンロード・共有可能な
 
 ### 📊 計算方法
 
