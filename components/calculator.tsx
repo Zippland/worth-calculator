@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { Wallet, Github, FileText, Book, History, Eye , Star} from 'lucide-react'; // 添加新图标
+import { Wallet, Github, FileText, Book, History, Eye, Star } from 'lucide-react'; // 添加新图标
 import Link from 'next/link'; // 导入Link组件用于导航
 import { useLanguage } from './LanguageContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -312,7 +312,7 @@ interface HistoryItem {
   salary: string;
   countryCode: string;
   countryName: string;
-  
+
   // 添加所有需要在分享页面展示的字段
   cityFactor: string;
   workHours: string;
@@ -368,6 +368,7 @@ interface FormData {
   education: string;
   hasShuttle: boolean;
   hasCanteen: boolean;
+  insuranceType?: string;
 }
 
 // 定义计算结果接口
@@ -382,21 +383,21 @@ interface Result {
 const SalaryCalculator = () => {
   // 获取语言上下文
   const { t, language } = useLanguage();
-  
+
   // 添加客户端检测
   const [isBrowser, setIsBrowser] = useState(false);
-  
+
   // 添加滚动位置保存的引用
   const scrollPositionRef = useRef(0);
-  
+
   // 添加历史记录状态
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [showHistory, setShowHistory] = useState(false);
-  
+
   // 在组件挂载时标记为浏览器环境
   useEffect(() => {
     setIsBrowser(true);
-    
+
     // 在客户端环境中执行重定向
     if (typeof window !== 'undefined') {
       const hostname = window.location.hostname;
@@ -405,7 +406,7 @@ const SalaryCalculator = () => {
       }
     }
   }, []);
-  
+
   // 添加用于创建分享图片的引用
   const shareResultsRef = useRef<HTMLDivElement>(null);
 
@@ -436,12 +437,13 @@ const SalaryCalculator = () => {
     education: '1.0',
     hasShuttle: false,         // 确保这是一个明确的布尔值
     hasCanteen: false,         // 确保这是一个明确的布尔值
+    insuranceType: '',         // 新增：保险类型
   });
 
   const [showPPPInput, setShowPPPInput] = useState(false);
   // 修改为国家代码，默认为中国
   const [selectedCountry, setSelectedCountry] = useState<string>('CN');
-  
+
   // 初始化时从localStorage加载国家设置
   useEffect(() => {
     // 从本地存储读取国家设置
@@ -452,7 +454,7 @@ const SalaryCalculator = () => {
       }
     }
   }, []);
-  
+
   // 当国家选择改变时保存到localStorage
   const handleCountryChange = (countryCode: string) => {
     setSelectedCountry(countryCode);
@@ -460,7 +462,7 @@ const SalaryCalculator = () => {
       localStorage.setItem('selectedCountry', countryCode);
     }
   };
-  
+
   const [result, setResult] = useState<Result | null>(null);
   const [showPPPList, setShowPPPList] = useState(false);
   const [assessment, setAssessment] = useState("");
@@ -475,7 +477,7 @@ const SalaryCalculator = () => {
       if (savedHistory) {
         try {
           const parsedHistory = JSON.parse(savedHistory) as Partial<HistoryItem>[];
-          
+
           // 处理历史记录，为可能缺失的字段添加默认值
           const normalizedHistory: HistoryItem[] = parsedHistory.map((item: Partial<HistoryItem>) => ({
             id: item.id || Date.now().toString(),
@@ -486,7 +488,7 @@ const SalaryCalculator = () => {
             salary: item.salary || '',
             countryCode: item.countryCode || 'CN',
             countryName: item.countryName || '中国',
-            
+
             // 为缺失的分享页面字段添加默认值
             cityFactor: item.cityFactor || formData.cityFactor,
             workHours: item.workHours || formData.workHours,
@@ -515,7 +517,7 @@ const SalaryCalculator = () => {
             hasShuttle: typeof item.hasShuttle === 'boolean' ? item.hasShuttle : false,
             hasCanteen: typeof item.hasCanteen === 'boolean' ? item.hasCanteen : false,
           }));
-          
+
           setHistory(normalizedHistory);
         } catch (e) {
           console.error('加载历史记录失败', e);
@@ -530,43 +532,43 @@ const SalaryCalculator = () => {
     const timer = setTimeout(() => {
       const pv = document.getElementById('busuanzi_value_site_pv');
       const uv = document.getElementById('busuanzi_value_site_uv');
-      
+
       if (pv && pv.innerText !== '') {
         // 直接在现有数字上加上1700000（原seeyoufarm统计数据）
         const currentCount = parseInt(pv.innerText, 10) || 0;
         pv.innerText = (currentCount + 1700000).toString();
-        
+
         // 同时增加访客数的历史数据
         if (uv && uv.innerText !== '') {
           const currentUV = parseInt(uv.innerText, 10) || 0;
           uv.innerText = (currentUV + 250000).toString();
         }
-        
+
         setVisitorVisible(true);
       } else {
         // 如果未加载，再次尝试
         const retryTimer = setTimeout(() => {
           const pv = document.getElementById('busuanzi_value_site_pv');
           const uv = document.getElementById('busuanzi_value_site_uv');
-          
+
           if (pv && pv.innerText !== '') {
             // 直接在现有数字上加上1700000（原seeyoufarm统计数据）
             const currentCount = parseInt(pv.innerText, 10) || 0;
             pv.innerText = (currentCount + 1700000).toString();
-            
+
             // 同时增加访客数的历史数据
             if (uv && uv.innerText !== '') {
               const currentUV = parseInt(uv.innerText, 10) || 0;
               uv.innerText = (currentUV + 1300000).toString();
             }
-            
+
             setVisitorVisible(true);
           }
         }, 2000);
         return () => clearTimeout(retryTimer);
       }
     }, 1000);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -609,13 +611,13 @@ const SalaryCalculator = () => {
   const calculateDailySalary = useCallback(() => {
     if (!formData.salary) return 0;
     const workingDays = calculateWorkingDays();
-    
+
     // 应用PPP转换因子标准化薪资
     // 如果选择了非中国地区，使用选定国家的PPP；否则使用中国默认值4.19
     const isNonChina = selectedCountry !== 'CN';
     const pppFactor = isNonChina ? pppFactors[selectedCountry] || 4.19 : 4.19;
     const standardizedSalary = Number(formData.salary) * (4.19 / pppFactor);
-    
+
     return standardizedSalary / workingDays; // 除 0 不管, Infinity(爽到爆炸)!
   }, [formData.salary, selectedCountry, calculateWorkingDays]);
 
@@ -637,13 +639,13 @@ const SalaryCalculator = () => {
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new Event('beforeStateChange'));
     }
-    
+
     // 直接设置值，不进行任何验证
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
-    
+
     // 在状态更新后，触发恢复滚动位置事件
     setTimeout(() => {
       if (typeof window !== 'undefined') {
@@ -654,48 +656,48 @@ const SalaryCalculator = () => {
 
   const calculateValue = () => {
     if (!formData.salary) return 0;
-    
+
     const dailySalary = calculateDailySalary();
     const workHours = Number(formData.workHours);
     const commuteHours = Number(formData.commuteHours);
     const restTime = Number(formData.restTime);
-    
+
     // 确保正确转换为数字，使用parseFloat可以更可靠地处理字符串转数字
     const workDaysPerWeek = parseFloat(formData.workDaysPerWeek) || 5;
-    
+
     // 允许wfhDaysPerWeek为空字符串，计算时才处理为0
     const wfhInput = formData.wfhDaysPerWeek.trim();
     const wfhDaysPerWeek = wfhInput === '' ? 0 : Math.min(parseFloat(wfhInput) || 0, workDaysPerWeek);
-    
+
     // 确保有办公室工作天数时才计算比例，否则设为0
     const officeDaysRatio = workDaysPerWeek > 0 ? (workDaysPerWeek - wfhDaysPerWeek) / workDaysPerWeek : 0;
-    
+
     // 在计算结果中添加一个小的日志输出，以便调试
-    console.log('WFH计算:', { 
-      workDaysPerWeek, 
-      wfhDaysPerWeek, 
-      officeDaysRatio, 
-      effectiveCommute: commuteHours * officeDaysRatio 
+    console.log('WFH计算:', {
+      workDaysPerWeek,
+      wfhDaysPerWeek,
+      officeDaysRatio,
+      effectiveCommute: commuteHours * officeDaysRatio
     });
-    
+
     // 班车系数只在勾选时使用，否则为1.0
     const shuttleFactor = formData.hasShuttle ? Number(formData.shuttle) : 1.0;
     const effectiveCommuteHours = commuteHours * officeDaysRatio * shuttleFactor;
-    
+
     // 食堂系数只在勾选时使用，否则为1.0
     const canteenFactor = formData.hasCanteen ? Number(formData.canteen) : 1.0;
-    
+
     // 工作环境因素，包含食堂和家乡因素
-    const environmentFactor = Number(formData.workEnvironment) * 
-                            Number(formData.leadership) * 
-                            Number(formData.teamwork) *
-                            Number(formData.cityFactor) *
-                            canteenFactor;
-    
+    const environmentFactor = Number(formData.workEnvironment) *
+      Number(formData.leadership) *
+      Number(formData.teamwork) *
+      Number(formData.cityFactor) *
+      canteenFactor;
+
     // 根据工作年限计算经验薪资倍数
     const workYears = Number(formData.workYears);
     let experienceSalaryMultiplier = 1.0;
-    
+
     if (workYears === 0) {
       // 应届生：直接根据工作类型设定初始调整系数，反映稳定性/风险价值
       // 注意：这些系数在分母中，系数越小，最终价值越高
@@ -714,42 +716,53 @@ const SalaryCalculator = () => {
       }
     } else {
       // 非应届生：使用基于增长预期的模型
-      
-    // 基准薪资增长曲线（适用于私企）
-    let baseSalaryMultiplier = 1.0;
+
+      // 基准薪资增长曲线（适用于私企）
+      let baseSalaryMultiplier = 1.0;
       if (workYears === 1) baseSalaryMultiplier = 1.5;    // 1年：1.50-2.00，取中间值
-    else if (workYears <= 3) baseSalaryMultiplier = 2.2;     // 2-3年：2.20-2.50，取中间值
-    else if (workYears <= 5) baseSalaryMultiplier = 2.7;     // 4-5年：2.70-3.00，取中间值
-    else if (workYears <= 8) baseSalaryMultiplier = 3.2;     // 6-8年：3.20-3.50，取中间值
-    else if (workYears <= 10) baseSalaryMultiplier = 3.6;    // 9-10年：3.60-3.80，取中间值
-    else baseSalaryMultiplier = 3.9;                         // 11-13年：3.90-4.20，取中间值
-    
-    // 工作单位类型对涨薪幅度的影响系数
-    let salaryGrowthFactor = 1.0;  // 私企基准
-    if (formData.jobStability === 'foreign') {
-      salaryGrowthFactor = 0.8;    // 外企涨薪幅度为私企的80%
-    } else if (formData.jobStability === 'state') {
-      salaryGrowthFactor = 0.4;    // 央/国企涨薪幅度为私企的40%
-    } else if (formData.jobStability === 'government') {
-      salaryGrowthFactor = 0.2;    // 体制内涨薪幅度为私企的20%
-    } else if (formData.jobStability === 'dispatch') {
-      salaryGrowthFactor = 1.2;    // 派遣社员涨薪幅度为私企的120%（体现不稳定性）
-    } else if (formData.jobStability === 'freelance') {
-      salaryGrowthFactor = 1.2;    // 自由职业涨薪幅度为私企的120%（体现不稳定性）
+      else if (workYears <= 3) baseSalaryMultiplier = 2.2;     // 2-3年：2.20-2.50，取中间值
+      else if (workYears <= 5) baseSalaryMultiplier = 2.7;     // 4-5年：2.70-3.00，取中间值
+      else if (workYears <= 8) baseSalaryMultiplier = 3.2;     // 6-8年：3.20-3.50，取中间值
+      else if (workYears <= 10) baseSalaryMultiplier = 3.6;    // 9-10年：3.60-3.80，取中间值
+      else baseSalaryMultiplier = 3.9;                         // 11-13年：3.90-4.20，取中间值
+
+      // 工作单位类型对涨薪幅度的影响系数
+      let salaryGrowthFactor = 1.0;  // 私企基准
+      if (formData.jobStability === 'foreign') {
+        salaryGrowthFactor = 0.8;    // 外企涨薪幅度为私企的80%
+      } else if (formData.jobStability === 'state') {
+        salaryGrowthFactor = 0.4;    // 央/国企涨薪幅度为私企的40%
+      } else if (formData.jobStability === 'government') {
+        salaryGrowthFactor = 0.2;    // 体制内涨薪幅度为私企的20%
+      } else if (formData.jobStability === 'dispatch') {
+        salaryGrowthFactor = 1.2;    // 派遣社员涨薪幅度为私企的120%（体现不稳定性）
+      } else if (formData.jobStability === 'freelance') {
+        salaryGrowthFactor = 1.2;    // 自由职业涨薪幅度为私企的120%（体现不稳定性）
+      }
+
+      // 根据公式: 1 + (对应幅度-1) * 工作单位系数，计算最终薪资倍数
+      experienceSalaryMultiplier = 1 + (baseSalaryMultiplier - 1) * salaryGrowthFactor;
     }
-    
-    // 根据公式: 1 + (对应幅度-1) * 工作单位系数，计算最终薪资倍数
-    experienceSalaryMultiplier = 1 + (baseSalaryMultiplier - 1) * salaryGrowthFactor;
+
+    // 保险类型系数
+    let insuranceFactor = 1.0;
+    if (formData.insuranceType === 'five') {
+      insuranceFactor = 1.0; // 五险一金
+    } else if (formData.insuranceType === 'six') {
+      insuranceFactor = 1.1; // 六险一金，略加分
+    } else if (formData.insuranceType === 'none') {
+      insuranceFactor = 0.9; // 无，扣分
     }
-    
+
     // 薪资满意度应该受到经验薪资倍数的影响
     // 相同薪资，对于高经验者来说价值更低，对应的计算公式需要考虑经验倍数
-    return (dailySalary * environmentFactor) / 
-           (35 * (workHours + effectiveCommuteHours - 0.5 * restTime) * Number(formData.education) * experienceSalaryMultiplier);
+    return (dailySalary * environmentFactor) /
+      (35 * (workHours + effectiveCommuteHours - 0.5 * restTime) * Number(formData.education) * experienceSalaryMultiplier)
+      * insuranceFactor;
   };
 
   const value = calculateValue();
-  
+
   const getValueAssessment = useCallback(() => {
     if (!formData.salary) return { text: t('rating_enter_salary'), color: "text-gray-500" };
     if (value < 0.6) return { text: t('rating_terrible'), color: "text-pink-800" };
@@ -760,7 +773,7 @@ const SalaryCalculator = () => {
     if (value <= 4.0) return { text: t('rating_excellent'), color: "text-purple-500" };
     return { text: t('rating_perfect'), color: "text-yellow-400" };
   }, [formData.salary, value, t]);
-  
+
   // 获取评级的翻译键，用于分享链接
   const getValueAssessmentKey = useCallback(() => {
     if (!formData.salary) return 'rating_enter_salary';
@@ -787,8 +800,8 @@ const SalaryCalculator = () => {
           <button
             key={option.value}
             className={`px-3 py-2 rounded-md text-sm transition-colors
-              ${value === option.value 
-                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium' 
+              ${value === option.value
+                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 font-medium'
                 : 'bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300'}`}
             onClick={(e) => {
               e.preventDefault(); // 阻止默认行为
@@ -809,20 +822,20 @@ const SalaryCalculator = () => {
     const degreeType = formData.degreeType;
     const schoolType = formData.schoolType;
     const bachelorType = formData.bachelorType;
-    
+
     // 使用更简单的方式计算系数，避免复杂的索引类型问题
     let factor = 1.0; // 默认值
-    
+
     // 专科及以下固定为0.8
     if (degreeType === 'belowBachelor') {
       factor = 0.8;
-    } 
+    }
     // 本科学历
     else if (degreeType === 'bachelor') {
       if (schoolType === 'secondTier') factor = 0.9;       // 二本三本
       else if (schoolType === 'firstTier') factor = 1.0;   // 双非/QS100/USnews50
       else if (schoolType === 'elite') factor = 1.2;       // 985/211/QS30/USnews20
-    } 
+    }
     // 硕士学历 - 考虑本科背景
     else if (degreeType === 'masters') {
       // 先获取本科背景的基础系数
@@ -830,23 +843,23 @@ const SalaryCalculator = () => {
       if (bachelorType === 'secondTier') bachelorBaseCoefficient = 0.9;       // 二本三本
       else if (bachelorType === 'firstTier') bachelorBaseCoefficient = 1.0;   // 双非/QS100/USnews50
       else if (bachelorType === 'elite') bachelorBaseCoefficient = 1.2;       // 985/211/QS30/USnews20
-      
+
       // 再计算硕士学校的加成系数
       let mastersBonus = 0;
       if (schoolType === 'secondTier') mastersBonus = 0.4;       // 二本三本硕士
       else if (schoolType === 'firstTier') mastersBonus = 0.5;   // 双非/QS100/USnews50硕士
       else if (schoolType === 'elite') mastersBonus = 0.6;       // 985/211/QS30/USnews20硕士
-      
+
       // 最终学历系数 = 本科基础 + 硕士加成
       factor = bachelorBaseCoefficient + mastersBonus;
-    } 
+    }
     // 博士学历
     else if (degreeType === 'phd') {
       if (schoolType === 'secondTier') factor = 1.6;       // 二本三本博士
       else if (schoolType === 'firstTier') factor = 1.8;   // 双非/QS100/USnews50博士
       else if (schoolType === 'elite') factor = 2.0;       // 985/211/QS30/USnews20博士
     }
-    
+
     // 更新education字段
     if (formData.education !== String(factor)) {
       // 这里不使用handleInputChange以避免触发滚动保存/恢复逻辑
@@ -855,10 +868,10 @@ const SalaryCalculator = () => {
         education: String(factor)
       }));
     }
-    
+
     return factor;
   }, [formData.degreeType, formData.schoolType, formData.bachelorType, formData.education]);
-  
+
   // 在组件初始化和学历选择变化时计算教育系数
   useEffect(() => {
     calculateEducationFactor();
@@ -874,11 +887,11 @@ const SalaryCalculator = () => {
     }
     return countryNames.zh[countryCode] || countryCode || '未知';
   }, [language]);
-  
+
   // 保存当前记录到历史中
   const saveToHistory = useCallback(() => {
     if (!formData.salary || typeof window === 'undefined') return;
-    
+
     const newHistoryItem: HistoryItem = {
       id: Date.now().toString(),
       timestamp: Date.now(),
@@ -888,7 +901,7 @@ const SalaryCalculator = () => {
       salary: formData.salary,
       countryCode: selectedCountry,
       countryName: getCountryName(selectedCountry),
-      
+
       // 添加所有需要在分享页面展示的字段
       cityFactor: formData.cityFactor,
       workHours: formData.workHours,
@@ -916,7 +929,7 @@ const SalaryCalculator = () => {
       hasShuttle: formData.hasShuttle,
       hasCanteen: formData.hasCanteen,
     };
-    
+
     try {
       const updatedHistory = [newHistoryItem, ...history.slice(0, 9)]; // 限制保存10条记录
       setHistory(updatedHistory);
@@ -925,15 +938,15 @@ const SalaryCalculator = () => {
     } catch (e) {
       console.error('保存历史记录失败', e);
     }
-    
+
     return newHistoryItem;
   }, [formData, value, getValueAssessmentKey, getValueAssessment, selectedCountry, history, getCountryName, calculateWorkingDays, getDisplaySalary, formData.hasShuttle, formData.hasCanteen]);
-  
+
   // 删除单条历史记录
   const deleteHistoryItem = useCallback((id: string, e: React.MouseEvent) => {
     e.stopPropagation(); // 阻止事件冒泡
     e.preventDefault(); // 阻止默认行为
-    
+
     try {
       const updatedHistory = history.filter(item => item.id !== id);
       setHistory(updatedHistory);
@@ -943,12 +956,12 @@ const SalaryCalculator = () => {
       console.error('删除历史记录失败', e);
     }
   }, [history]);
-  
+
   // 清空所有历史记录
   const clearAllHistory = useCallback((e: React.MouseEvent) => {
     e.stopPropagation(); // 阻止事件冒泡
     e.preventDefault(); // 阻止默认行为
-    
+
     try {
       setHistory([]);
       localStorage.removeItem('jobValueHistory');
@@ -973,7 +986,7 @@ const SalaryCalculator = () => {
     <div className="max-w-2xl mx-auto p-4 sm:p-6">
       <div className="mb-4 text-center">
         <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 py-2">{t('title')}</h1>
-        
+
         <div className="mb-3">
           <a
             href="https://github.com/zippland/worth-calculator"
@@ -985,7 +998,7 @@ const SalaryCalculator = () => {
             {t('star_request')}
           </a>
         </div>
-        
+
         <div className="flex items-center justify-center gap-3 mb-2">
           <p className="text-sm text-gray-500 dark:text-gray-400">v6.2.1</p>
           <a
@@ -1017,7 +1030,7 @@ const SalaryCalculator = () => {
             </button>
           )}
         </div>
-        
+
         {/* 历史记录列表 - 仅在客户端渲染 */}
         {isBrowser && showHistory && (
           <div className="relative z-10">
@@ -1030,14 +1043,14 @@ const SalaryCalculator = () => {
                   </h3>
                   <div className="flex gap-2">
                     {history.length > 0 && (
-                      <button 
+                      <button
                         onClick={clearAllHistory}
                         className="text-xs text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         {t('clear_all')}
                       </button>
                     )}
-                    <button 
+                    <button
                       onClick={(e) => {
                         e.stopPropagation(); // 阻止事件冒泡
                         setShowHistory(false);
@@ -1048,7 +1061,7 @@ const SalaryCalculator = () => {
                     </button>
                   </div>
                 </div>
-                
+
                 {history.length > 0 ? (
                   <ul className="space-y-2">
                     {history.map((item) => (
@@ -1069,7 +1082,7 @@ const SalaryCalculator = () => {
                             onClick={(e) => {
                               e.stopPropagation(); // 阻止事件冒泡
                               e.preventDefault(); // 阻止默认行为
-                              
+
                               // 恢复历史记录中的值到当前表单
                               setFormData({
                                 ...formData,
@@ -1099,10 +1112,10 @@ const SalaryCalculator = () => {
                                 hasShuttle: typeof item.hasShuttle === 'boolean' ? item.hasShuttle : false,
                                 hasCanteen: typeof item.hasCanteen === 'boolean' ? item.hasCanteen : false,
                               });
-                              
+
                               // 设置国家
                               handleCountryChange(item.countryCode);
-                              
+
                               // 关闭历史记录面板
                               setShowHistory(false);
                             }}
@@ -1186,11 +1199,11 @@ const SalaryCalculator = () => {
             </div>
           </div>
         )}
-        
+
         <div className="flex justify-center mb-2">
           <LanguageSwitcher />
         </div>
-        
+
         {/* 访问统计 - 仅在客户端渲染 */}
         {isBrowser && (
           <div className="mt-1 text-xs text-gray-400 dark:text-gray-600 flex justify-center gap-4">
@@ -1210,8 +1223,8 @@ const SalaryCalculator = () => {
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                {selectedCountry !== 'CN' ? 
-                  `${t('annual_salary')}(${getCurrencySymbol(selectedCountry)})` : 
+                {selectedCountry !== 'CN' ?
+                  `${t('annual_salary')}(${getCurrencySymbol(selectedCountry)})` :
                   t('annual_salary_cny')}
               </label>
               <div className="flex items-center gap-2 mt-1">
@@ -1220,8 +1233,8 @@ const SalaryCalculator = () => {
                   type="number"
                   value={formData.salary}
                   onChange={(e) => handleInputChange('salary', e.target.value)}
-                  placeholder={selectedCountry !== 'CN' ? 
-                    `${t('salary_placeholder')} ${getCurrencySymbol(selectedCountry)}` : 
+                  placeholder={selectedCountry !== 'CN' ?
+                    `${t('salary_placeholder')} ${getCurrencySymbol(selectedCountry)}` :
                     t('salary_placeholder_cny')}
                   className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white"
                 />
@@ -1292,7 +1305,7 @@ const SalaryCalculator = () => {
                 />
               </div>
             </div>
-            
+
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('annual_leave')}</label>
@@ -1415,7 +1428,7 @@ const SalaryCalculator = () => {
                     </select>
                   </div>
                 </div>
-                
+
                 {/* 硕士显示本科背景选项 */}
                 {formData.degreeType === 'masters' && (
                   <div className="mt-4">
@@ -1450,6 +1463,20 @@ const SalaryCalculator = () => {
                   <option value="15">{t('years_above_12')}</option>
                 </select>
               </div>
+
+              {/* 保险类型选择 */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">保险类型</label>
+                <select
+                  value={formData.insuranceType || ''}
+                  onChange={(e) => handleInputChange('insuranceType', e.target.value)}
+                  className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white"
+                >
+                  <option value="five">五险一金</option>
+                  <option value="six">六险一金</option>
+                  <option value="none">无</option>
+                </select>
+              </div>
             </div>
 
             {/* 添加工作类型RadioGroup */}
@@ -1467,7 +1494,7 @@ const SalaryCalculator = () => {
                 { label: t('job_freelance'), value: 'freelance' },
               ]}
             />
-            
+
             <RadioGroup
               label={t('work_environment')}
               name="workEnvironment"
@@ -1549,7 +1576,7 @@ const SalaryCalculator = () => {
                   {t('shuttle')}
                 </label>
               </div>
-              
+
               {formData.hasShuttle && (
                 <RadioGroup
                   label=""
@@ -1579,7 +1606,7 @@ const SalaryCalculator = () => {
                   {t('canteen')}
                 </label>
               </div>
-              
+
               {formData.hasCanteen && (
                 <RadioGroup
                   label=""
@@ -1600,7 +1627,7 @@ const SalaryCalculator = () => {
       </div>
 
       {/* 结果卡片优化 */}
-      <div ref={shareResultsRef} className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 shadow-inner">
+      <div ref={shareResultsRef} className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl p-6 shadow-inner mt-5">
         <div className="grid grid-cols-3 gap-8">
           <div>
             <div className="text-sm font-medium text-gray-500 dark:text-gray-400">{t('working_days_per_year')}</div>
@@ -1620,7 +1647,7 @@ const SalaryCalculator = () => {
             </div>
           </div>
         </div>
-        
+
         {/* 修改分享按钮为链接到分享页面，并保存到历史 */}
         <div className="mt-6 flex justify-end">
           <Link
@@ -1662,8 +1689,8 @@ const SalaryCalculator = () => {
               }
             }}
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors
-              ${formData.salary ? 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800' : 
-              'bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-800 dark:text-gray-600'}`}
+              ${formData.salary ? 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800' :
+                'bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-800 dark:text-gray-600'}`}
             onClick={() => formData.salary ? saveToHistory() : null}
           >
             <FileText className="w-4 h-4" />
