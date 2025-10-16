@@ -42,8 +42,10 @@ function ShareCardWrapper() {
   const homeTown = searchParams.get('homeTown') || 'no';
   const shuttle = searchParams.get('shuttle') || '1.0';
   const canteen = searchParams.get('canteen') || '1.0';
+  const climate = searchParams.get('climate') || '1.0';
   const hasShuttle = searchParams.get('hasShuttle') === 'true';
   const hasCanteen = searchParams.get('hasCanteen') === 'true';
+  const hasClimate = searchParams.get('hasClimate') === 'true';
   
   // 额外参数 - 学历和工作经验
   const degreeType = searchParams.get('degreeType') || 'bachelor';
@@ -85,8 +87,10 @@ function ShareCardWrapper() {
         homeTown={homeTown}
         shuttle={shuttle}
         canteen={canteen}
+        climate={climate}
         hasShuttle={hasShuttle}
         hasCanteen={hasCanteen}
+        hasClimate={hasClimate}
         
         // 学历和工作经验
         degreeType={degreeType}
